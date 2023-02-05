@@ -16,3 +16,16 @@
 <span>
 </span>
 </details>
+
+<details>
+<summary>authors</summary>
+<span>
+</span>
+</details>
+
+<details>
+<summary>contributors</summary>
+<span>
+</span>
+</details>
+
