@@ -89,7 +89,7 @@
   </details>
 
   <details>
-  <summary>authors writing function</summary>
+  <summary>authors writing progress</summary>
   <span>
 
     to be continued
@@ -98,11 +98,6 @@
       - [x] progress settings
   </span>
   </details>
-
-
-      authors writing progress ->
-        
-          
 </span>
 </details>
 
