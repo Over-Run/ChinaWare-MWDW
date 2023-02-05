@@ -6,25 +6,28 @@
 - 方便的，安全的
 
 <details>
-<summary>function</summary>
+<summary>function功能</summary>
 <span>
 </span>
 </details>
 
 <details>
-<summary>progress</summary>
+<summary>progress进展</summary>
 <span>
 </span>
 </details>
 
 <details>
-<summary>authors</summary>
+<summary>authors制作者</summary>
 <span>
-</span>
+
+- such as author in Organization Name
+- [X] baka4n in Overrun Organization
+  </span>
 </details>
 
 <details>
-<summary>contributors</summary>
+<summary>contributors贡献者</summary>
 <span>
 </span>
 </details>
