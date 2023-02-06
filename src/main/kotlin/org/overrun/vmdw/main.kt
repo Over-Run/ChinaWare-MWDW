@@ -32,23 +32,31 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.FrameWindowScope
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.ui.window.*
+import org.overrun.vmdw.config.Config
 
 /**
  * @author baka4n, squid233
  * @since 0.1.0
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun windowContent(scope: FrameWindowScope) = scope.run {
     var text by remember { mutableStateOf("test ui") }
 
     MaterialTheme {
+        MenuBar {
+            Menu(I18n["menu.file"], mnemonic = 'F') {
+                Item("test_file", onClick = { println("test_file")}, shortcut = KeyShortcut(Key.F, ctrl = true))
+            }
+        }
         Column(Modifier.fillMaxSize(), Arrangement.spacedBy(5.dp)) {
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -60,17 +68,24 @@ fun windowContent(scope: FrameWindowScope) = scope.run {
             }
         }
     }
+
 }
 
 /**
- * @author squid233
+ * @author squid233, baka4n
  * @since 0.1.0
+ * todo 23/2/6 rewrite -> isOpen -> close window
  */
 fun main() = application {
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "ChinaWare VMDW",
-        state = rememberWindowState(width = 300.dp, height = 300.dp),
-        icon = painterResource("icon.png")
-    ) { windowContent(this) }
+    Config.init()
+    I18n.init()
+    var isOpen by remember { mutableStateOf(true) }
+    if (isOpen) {
+        Window(
+            onCloseRequest = {isOpen = false},
+            title = "ChinaWare VMDW",
+            state = rememberWindowState(width = 300.dp, height = 300.dp),
+            icon = painterResource("icon.png")
+        ) { windowContent(this) }
+    }
 }

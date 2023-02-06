@@ -1,6 +1,9 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
 plugins {
     kotlin("jvm") version "1.8.0"
     id("org.jetbrains.compose") version "1.3.0"
+    kotlin("plugin.serialization") version "1.8.0"
 }
 
 val projGroupId: String by project
@@ -27,6 +30,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
     compileOnly("org.jetbrains:annotations:23.1.0")
     testCompileOnly("org.jetbrains:annotations:23.1.0")
 }
@@ -34,6 +38,10 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "org.overrun.vmdw.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Exe, TargetFormat.Deb)
+        }
     }
 }
 
