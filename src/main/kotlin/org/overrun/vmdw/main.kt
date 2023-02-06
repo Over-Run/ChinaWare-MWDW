@@ -24,7 +24,6 @@
 
 package org.overrun.vmdw
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,15 +35,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import java.awt.Label
 
-
+/**
+ * @author baka4n, squid233
+ * @since 0.1.0
+ */
 @Composable
-@Preview
-fun App() {
+fun windowContent(scope: FrameWindowScope) = scope.run {
     var text by remember { mutableStateOf("test ui") }
 
     MaterialTheme {
@@ -58,9 +59,7 @@ fun App() {
                 Text(text)
             }
         }
-
     }
-
 }
 
 /**
@@ -73,8 +72,5 @@ fun main() = application {
         title = "ChinaWare VMDW",
         state = rememberWindowState(width = 300.dp, height = 300.dp),
         icon = painterResource("icon.png")
-    ) {
-        App()
-    }
-
+    ) { windowContent(this) }
 }
