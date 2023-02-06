@@ -46,17 +46,11 @@ import org.overrun.vmdw.config.Config
  * @author baka4n, squid233
  * @since 0.1.0
  */
-@OptIn(ExperimentalComposeUiApi::class)
+
 @Composable
 fun windowContent(scope: FrameWindowScope) = scope.run {
     var text by remember { mutableStateOf("test ui") }
-
     MaterialTheme {
-        MenuBar {
-            Menu(I18n["menu.file"], mnemonic = 'F') {
-                Item("test_file", onClick = { println("test_file")}, shortcut = KeyShortcut(Key.F, ctrl = true))
-            }
-        }
         Column(Modifier.fillMaxSize(), Arrangement.spacedBy(5.dp)) {
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -76,6 +70,7 @@ fun windowContent(scope: FrameWindowScope) = scope.run {
  * @since 0.1.0
  * todo 23/2/6 rewrite -> isOpen -> close window
  */
+@OptIn(ExperimentalComposeUiApi::class)
 fun main() = application {
     Config.init()
     I18n.init()
@@ -86,6 +81,19 @@ fun main() = application {
             title = "ChinaWare VMDW",
             state = rememberWindowState(width = 300.dp, height = 300.dp),
             icon = painterResource("icon.png")
-        ) { windowContent(this) }
+        ) {
+            MenuBar {
+                Menu(I18n["menu.file"], mnemonic = 'F') {
+                    Item(I18n["file.close"], onClick = { isOpen = false })
+                }
+                Menu(I18n["menu.edit"], mnemonic = 'E') {
+                    Item(I18n["edit.language"], onClick = {
+                        
+                    })
+                }
+            }
+            windowContent(this)
+
+        }
     }
 }

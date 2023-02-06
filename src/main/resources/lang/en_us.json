@@ -1,6 +1,8 @@
 {
   "menu.file": "File",
+  "file.close": "close",
   "menu.edit": "Edit",
+  "edit.language": "language",
   "menu.view": "View",
   "menu.help": "Help"
 }

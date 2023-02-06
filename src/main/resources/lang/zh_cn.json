@@ -1,6 +1,8 @@
 {
   "menu.file": "文件 (F)",
+  "file.close": "关闭",
   "menu.edit": "编辑 (E)",
+  "edit.language": "语言选项",
   "menu.view": "查看 (V)",
   "menu.help": "帮助 (H)"
 }
