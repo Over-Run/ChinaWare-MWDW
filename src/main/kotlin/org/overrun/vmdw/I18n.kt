@@ -27,6 +27,7 @@ package org.overrun.vmdw
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
 import java.io.FileNotFoundException
 
@@ -38,7 +39,7 @@ object I18n {
     private val i18nTranslate: MutableMap<String, MutableMap<String, String>> = HashMap()
 
     fun translate(lang: String, key: String): String =
-        (i18nTranslate[lang] ?: i18nTranslate["en_us"])?.get(key) ?: key
+        i18nTranslate[lang]?.getOrDefault(key, i18nTranslate[CONFIG_LANG_DEF]?.get(key)) ?: key
 
     operator fun get(key: String): String =
         translate(Config.language, key)

@@ -41,6 +41,9 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Exe, TargetFormat.Deb)
+            description = projDesc
+            vendor = orgName
+            licenseFile.set(file("LICENSE"))
         }
     }
 }

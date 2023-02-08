@@ -27,19 +27,21 @@ package org.overrun.vmdw
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import org.overrun.vmdw.config.Config
+import java.awt.Desktop
+import java.net.URI
 
 /**
  * @author baka4n, squid233
@@ -87,7 +89,11 @@ fun main() {
             ) {
                 MenuBar {
                     Menu(I18n["menu.file"], mnemonic = 'F') {
-                        Item(I18n["menu.file.settings"], mnemonic = 'T', shortcut = KeyShortcut(Key.S, ctrl = true, alt = true)) { }
+                        Item(
+                            I18n["menu.file.settings"],
+                            mnemonic = 'T',
+                            shortcut = KeyShortcut(Key.S, ctrl = true, alt = true)
+                        ) { }
                         Item(I18n["menu.file.exit"], mnemonic = 'X') { isOpen = false }
                     }
                     Menu(I18n["menu.edit"], mnemonic = 'E') { }
@@ -102,8 +108,29 @@ fun main() {
         if (isAboutOpen) {
             Dialog(
                 onCloseRequest = { isAboutOpen = false },
-                title = I18n["dialog.about.title"]
-            ) {}
+                title = I18n["dialog.about.title"],
+                state = DialogState(width = 300.dp, height = 300.dp)
+            ) {
+                // 关于内容
+                Column {
+                    TextButton(
+                        onClick = {
+                            if (Desktop.isDesktopSupported()) {
+                                Desktop.getDesktop().also {
+                                    if (it.isSupported(Desktop.Action.BROWSE)) {
+                                        it.browse(URI.create("https://github.com/Over-Run/ChinaWare-VMDW"))
+                                    }
+                                }
+                            }
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        shape = RoundedCornerShape(1.dp)
+                    ) {
+                        Text(text = "ChinaWare VMDW", color = Color.Blue)
+                    }
+                    Text(text = "  ChinaWare VMDW full name is ChinaWare Visualize Minecraft Development Wheel")
+                }
+            }
         }
     }
 }
