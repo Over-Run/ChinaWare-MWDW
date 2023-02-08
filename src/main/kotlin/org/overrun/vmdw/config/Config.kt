@@ -35,7 +35,8 @@ object Config {
     var language: String = "en_us"
 
     fun init() {
-        val file = File(System.getProperty("user.dir"), "config.json")
+        val file = File(System.getProperty("user.dir"), ".vmdw/config.json")
+        file.parentFile.also { if (!it.exists()) it.mkdirs() }
         if (!file.exists()) {
             javaClass.classLoader.getResourceAsStream("config.json")!!.buffered().use {
                 FileOutputStream(file).buffered().use(it::transferTo)

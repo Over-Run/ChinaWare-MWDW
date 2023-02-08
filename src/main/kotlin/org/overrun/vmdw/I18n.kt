@@ -25,8 +25,6 @@
 package org.overrun.vmdw
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import org.overrun.vmdw.config.Config
@@ -40,7 +38,7 @@ object I18n {
     private val i18nTranslate: MutableMap<String, MutableMap<String, String>> = HashMap()
 
     fun translate(lang: String, key: String): String =
-        i18nTranslate[lang]!!.getOrDefault(key, key)
+        (i18nTranslate[lang] ?: i18nTranslate["en_us"])?.get(key) ?: key
 
     operator fun get(key: String): String =
         translate(Config.language, key)

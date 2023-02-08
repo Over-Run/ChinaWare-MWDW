@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -68,32 +67,43 @@ fun windowContent(scope: FrameWindowScope) = scope.run {
 /**
  * @author squid233, baka4n
  * @since 0.1.0
- * todo 23/2/6 rewrite -> isOpen -> close window
  */
 @OptIn(ExperimentalComposeUiApi::class)
-fun main() = application {
+fun main() {
+    // Note: Do NOT use expression body. That cause the initialization reruns.
     Config.init()
     I18n.init()
-    var isOpen by remember { mutableStateOf(true) }
-    if (isOpen) {
-        Window(
-            onCloseRequest = {isOpen = false},
-            title = "ChinaWare VMDW",
-            state = rememberWindowState(width = 300.dp, height = 300.dp),
-            icon = painterResource("icon.png")
-        ) {
-            MenuBar {
-                Menu(I18n["menu.file"], mnemonic = 'F') {
-                    Item(I18n["file.close"], onClick = { isOpen = false })
-                }
-                Menu(I18n["menu.edit"], mnemonic = 'E') {
-                    Item(I18n["edit.language"], onClick = {
-                        
-                    })
-                }
-            }
-            windowContent(this)
 
+    application {
+        var isOpen by remember { mutableStateOf(true) }
+        var isAboutOpen by remember { mutableStateOf(true) }
+
+        if (isOpen) {
+            Window(
+                onCloseRequest = { isOpen = false },
+                title = "ChinaWare VMDW",
+                state = rememberWindowState(width = 800.dp, height = 640.dp),
+                icon = painterResource("icon.png")
+            ) {
+                MenuBar {
+                    Menu(I18n["menu.file"], mnemonic = 'F') {
+                        Item(I18n["menu.file.settings"], mnemonic = 'T', shortcut = KeyShortcut(Key.S, ctrl = true, alt = true)) { }
+                        Item(I18n["menu.file.exit"], mnemonic = 'X') { isOpen = false }
+                    }
+                    Menu(I18n["menu.edit"], mnemonic = 'E') { }
+                    Menu(I18n["menu.view"], mnemonic = 'V') { }
+                    Menu(I18n["menu.help"], mnemonic = 'H') {
+                        Item(I18n["menu.help.about"], mnemonic = 'A') { isAboutOpen = true }
+                    }
+                }
+                windowContent(this)
+            }
+        }
+        if (isAboutOpen) {
+            Dialog(
+                onCloseRequest = { isAboutOpen = false },
+                title = I18n["dialog.about.title"]
+            ) {}
         }
     }
 }

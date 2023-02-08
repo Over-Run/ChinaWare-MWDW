@@ -1,8 +1,10 @@
 {
   "menu.file": "文件 (F)",
-  "file.close": "关闭",
+  "menu.file.settings": "设置 (T)",
+  "menu.file.exit": "退出 (X)",
   "menu.edit": "编辑 (E)",
-  "edit.language": "语言选项",
   "menu.view": "查看 (V)",
-  "menu.help": "帮助 (H)"
+  "menu.help": "帮助 (H)",
+  "menu.help.about": "关于 (A)",
+  "dialog.about.title": "关于 ChinaWare-VMDW"
 }

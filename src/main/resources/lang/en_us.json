@@ -1,8 +1,10 @@
 {
   "menu.file": "File",
-  "file.close": "close",
+  "menu.file.settings": "Settings",
+  "menu.file.exit": "Exit",
   "menu.edit": "Edit",
-  "edit.language": "language",
   "menu.view": "View",
-  "menu.help": "Help"
+  "menu.help": "Help",
+  "menu.help.about": "About",
+  "dialog.about.title": "About ChinaWare-VMDW"
 }
