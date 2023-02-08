@@ -6,5 +6,6 @@
   "menu.view": "查看 (V)",
   "menu.help": "帮助 (H)",
   "menu.help.about": "关于 (A)",
-  "dialog.about.title": "关于 ChinaWare-VMDW"
+  "dialog.about.title": "关于 ChinaWare-VMDW",
+  "dialog.settings.title": "设置"
 }

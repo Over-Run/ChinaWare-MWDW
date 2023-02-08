@@ -6,5 +6,6 @@
   "menu.view": "View",
   "menu.help": "Help",
   "menu.help.about": "About",
-  "dialog.about.title": "About ChinaWare-VMDW"
+  "dialog.about.title": "About ChinaWare-VMDW",
+  "dialog.settings.title": "settings"
 }
