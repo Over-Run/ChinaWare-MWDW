@@ -24,9 +24,8 @@
 
 package org.overrun.vmdw
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -82,9 +81,8 @@ fun main() {
         var isSettingOpen by remember { mutableStateOf(false) }
         var width by remember { mutableStateOf(1000) }
         var height by remember { mutableStateOf(800) }
-        val datas = mutableListOf("english[us]", "简体中文")
+        var drop = remember { mutableStateOf(false) }
         if (isOpen) {
-
             Window(
                 onCloseRequest = { isOpen = false },
                 title = "ChinaWare VMDW",
@@ -159,8 +157,46 @@ fun main() {
                     position = WindowPosition(Alignment.Center)
                 )
             ) {
-                
+               Box(
+                   Modifier
+                       .fillMaxSize()
+                       .padding(10.dp)
+                       .wrapContentSize(Alignment.TopStart)
+               ) {
+                   TextButton(
+                       onClick = {
+                                 drop.value = true
+                       },
+                       modifier = Modifier.background(Color.LightGray)
+                   ) {
+                       Text(text = Config.get("language")!!)
+                   }
+                   DropdownMenu(
+                       expanded = drop.value,
+                       onDismissRequest = {
+                           drop.value = false
+                       }
+                   ) {
+                       DropdownMenuItem(
+                           onClick = {
+                               drop.value = false
+                           }
+                       ) {
+                           Text(text = "english[us]")
+                       }
+                       DropdownMenuItem(
+                           onClick = {
+                               drop.value = false
+
+                           }
+                       ) {
+                           Text(text = "简体中文")
+                       }
+
+                   }
+               }
             }
+
         }
     }
 }
