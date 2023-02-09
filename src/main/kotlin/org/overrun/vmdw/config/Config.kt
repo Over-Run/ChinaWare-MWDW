@@ -25,11 +25,12 @@
 package org.overrun.vmdw.config
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.json.encodeToStream
+import java.io.BufferedWriter
 import java.io.File
-import java.nio.file.Files
+import java.io.FileWriter
 
 const val CONFIG_LANG_KEY = "language"
 const val CONFIG_LANG_DEF = "en_us"
@@ -40,9 +41,8 @@ const val CONFIG_LANG_DEF = "en_us"
  */
 object Config {
     var language: String = CONFIG_LANG_DEF
-        private set
+        set
     val file = File(System.getProperty("user.dir"), ".vmdw/config.json")
-    val path = file.toPath()
     private val configMap: MutableMap<String, String> = HashMap()
 
     fun get(key: String, def: String): String = configMap.getOrDefault(key, def)
@@ -78,7 +78,12 @@ object Config {
     /**
      * Saves the configurations.
      */
+    @OptIn(ExperimentalSerializationApi::class)
     fun save() {
-        Files.writeString(path, Json.encodeToString(configMap))
+        BufferedWriter(FileWriter(file)).use {
+
+            Json.encodeToStream(configMap, file.outputStream())
+        }
+//        Files.writeString(path, Json.encodeToString(configMap))
     }
 }

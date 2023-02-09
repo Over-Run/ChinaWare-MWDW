@@ -38,7 +38,9 @@ import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
+import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
+import org.overrun.vmdw.items.SettingsDialog
 import java.awt.Desktop
 import java.net.URI
 
@@ -76,15 +78,16 @@ fun main() {
     I18n.init()
 
     application {
-        var isOpen by remember { mutableStateOf(true) }
+        val isOpen = remember { mutableStateOf(true) }
         var isAboutOpen by remember { mutableStateOf(false) }
-        var isSettingOpen by remember { mutableStateOf(false) }
-        var width by remember { mutableStateOf(1000) }
-        var height by remember { mutableStateOf(800) }
-        var drop = remember { mutableStateOf(false) }
-        if (isOpen) {
+        val isSettingOpen: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val width by remember { mutableStateOf(Config.get("width", "1000").toInt()) }
+        val height by remember { mutableStateOf(Config.get("height", "800").toInt()) }
+        val language = remember { mutableStateOf(Config.get("language", CONFIG_LANG_DEF)) }
+        val drop = remember { mutableStateOf(false) }
+        if (isOpen.value) {
             Window(
-                onCloseRequest = { isOpen = false },
+                onCloseRequest = { isOpen.value = false },
                 title = "ChinaWare VMDW",
                 state = WindowState(
                     size = DpSize(width.dp, height.dp),
@@ -92,6 +95,10 @@ fun main() {
                 ),
                 icon = painterResource("icon.png")
             ) {
+                SideEffect {
+
+                }
+
                 MenuBar {
                     Menu(I18n["menu.file"], mnemonic = 'F') {
                         Item(
@@ -99,9 +106,9 @@ fun main() {
                             mnemonic = 'T',
                             shortcut = KeyShortcut(Key.S, ctrl = true, alt = true),
                         ) {
-                            isSettingOpen = true
+                            isSettingOpen.value = true
                         }
-                        Item(I18n["menu.file.exit"], mnemonic = 'X') { isOpen = false }
+                        Item(I18n["menu.file.exit"], mnemonic = 'X') { isOpen.value = false }
                     }
                     Menu(I18n["menu.edit"], mnemonic = 'E') { }
                     Menu(I18n["menu.view"], mnemonic = 'V') { }
@@ -147,56 +154,67 @@ fun main() {
             }
         }
 
-        if (isSettingOpen) {
-            Dialog(
-                onCloseRequest = {isSettingOpen = false},
-                title = I18n["dialog.settings.title"],
-                state = DialogState(
-                    width = 800.dp,
-                    height = 640.dp,
-                    position = WindowPosition(Alignment.Center)
-                )
+        if (isSettingOpen.value) {
+            SettingsDialog(
+                isSettingOpen = isSettingOpen,
+                width = 800,
+                height = 640,
+                alignment = Alignment.Center
             ) {
-               Box(
-                   Modifier
-                       .fillMaxSize()
-                       .padding(10.dp)
-                       .wrapContentSize(Alignment.TopStart)
-               ) {
-                   TextButton(
-                       onClick = {
-                                 drop.value = true
-                       },
-                       modifier = Modifier.background(Color.LightGray)
-                   ) {
-                       Text(text = Config.get("language")!!)
-                   }
-                   DropdownMenu(
-                       expanded = drop.value,
-                       onDismissRequest = {
-                           drop.value = false
-                       }
-                   ) {
-                       DropdownMenuItem(
-                           onClick = {
-                               drop.value = false
-                           }
-                       ) {
-                           Text(text = "english[us]")
-                       }
-                       DropdownMenuItem(
-                           onClick = {
-                               drop.value = false
 
-                           }
-                       ) {
-                           Text(text = "简体中文")
-                       }
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)
+                        .wrapContentSize(Alignment.TopStart)
+                ) {
+                    TextButton(
+                        onClick = {
+                            drop.value = true
+                        },
+                        modifier = Modifier.background(Color.LightGray)
+                    ) {
+                        Text(text = language.value)
+                    }
 
-                   }
-               }
+                    DropdownMenu(
+                        expanded = drop.value,
+                        onDismissRequest = {
+                            drop.value = !drop.value
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            onClick = {
+                                drop.value = false
+                                language.value = "en_us"
+
+                            }
+                        ) {
+                            Text(text = "english[us]")
+
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                drop.value = false
+                                language.value = "zh_cn"
+                            }
+                        ) {
+                            Text(text = "简体中文")
+
+                        }
+
+                    }
+                }
+                Button(
+                    onClick = { isSettingOpen.value = false },
+                    modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.BottomCenter)
+                ) {
+                    Text("save")
+                    Config.set { it.language = language.value }
+                    I18n.init()
+                    Config.save()
+                }
             }
-
         }
     }
 }
