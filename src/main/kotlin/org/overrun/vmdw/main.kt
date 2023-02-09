@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
+import org.overrun.vmdw.items.DropdownMenuList
 import org.overrun.vmdw.items.SettingsDialog
 import java.awt.Desktop
 import java.net.URI
@@ -64,6 +65,7 @@ fun windowContent(scope: FrameWindowScope) = scope.run {
             }
         }
     }
+
 
 }
 
@@ -95,10 +97,6 @@ fun main() {
                 ),
                 icon = painterResource("icon.png")
             ) {
-                SideEffect {
-
-                }
-
                 MenuBar {
                     Menu(I18n["menu.file"], mnemonic = 'F') {
                         Item(
@@ -165,9 +163,10 @@ fun main() {
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .padding(10.dp)
+                        .padding(start = 100.dp, top = 10.dp)
                         .wrapContentSize(Alignment.TopStart)
                 ) {
+
                     TextButton(
                         onClick = {
                             drop.value = true
@@ -176,41 +175,45 @@ fun main() {
                     ) {
                         Text(text = language.value)
                     }
+                    val map: MutableMap<String, String> = HashMap()
+                    map["english[us]"] =   "             en_us             "
+                    map["简体中文"] =       "             zh_cn             "
+                    DropdownMenuList(drop, language, map)
 
-                    DropdownMenu(
-                        expanded = drop.value,
-                        onDismissRequest = {
-                            drop.value = !drop.value
-                        }
-                    ) {
-                        DropdownMenuItem(
-                            onClick = {
-                                drop.value = false
-                                language.value = "en_us"
-
-                            }
-                        ) {
-                            Text(text = "english[us]")
-
-                        }
-                        DropdownMenuItem(
-                            onClick = {
-                                drop.value = false
-                                language.value = "zh_cn"
-                            }
-                        ) {
-                            Text(text = "简体中文")
-
-                        }
-
-                    }
+//                    DropdownMenu(
+//                        expanded = drop.value,
+//                        onDismissRequest = {
+//                            drop.value = !drop.value
+//                        }
+//                    ) {
+//                        DropdownMenuItem(
+//                            onClick = {
+//                                drop.value = false
+//                                language.value = "     en_us     "
+//
+//                            }
+//                        ) {
+//                            Text(text = "english[us]")
+//
+//                        }
+//                        DropdownMenuItem(
+//                            onClick = {
+//                                drop.value = false
+//                                language.value = "     zh_cn     "
+//                            }
+//                        ) {
+//                            Text(text = "简体中文")
+//
+//                        }
+//
+//                    }
                 }
                 Button(
                     onClick = { isSettingOpen.value = false },
                     modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.BottomCenter)
                 ) {
                     Text("save")
-                    Config.set { it.language = language.value }
+                    Config.set { it.language = language.value.trim() }
                     I18n.init()
                     Config.save()
                 }
