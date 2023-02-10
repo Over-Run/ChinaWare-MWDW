@@ -1,4 +1,4 @@
-package org.overrun.vmdw.items
+package org.overrun.vmdw.items.window
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

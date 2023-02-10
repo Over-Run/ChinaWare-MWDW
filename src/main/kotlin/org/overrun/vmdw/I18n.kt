@@ -54,6 +54,8 @@ object I18n {
     }
 
     fun init() {
-        init(Config.language)
+        if (!i18nTranslate.containsKey(Config.language)) {
+            init(Config.language)
+        }
     }
 }

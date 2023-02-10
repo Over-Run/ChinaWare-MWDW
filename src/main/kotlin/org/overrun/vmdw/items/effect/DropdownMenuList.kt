@@ -1,4 +1,4 @@
-package org.overrun.vmdw.items
+package org.overrun.vmdw.items.effect
 
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -7,12 +7,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 
 @Composable
-fun DropdownMenuList(drop: MutableState<Boolean>, key: MutableState<String>, map: MutableMap<String, String>) {
-    dropDownMenuList(drop, key, map)
+fun DropdownMenuList(
+    drop: MutableState<Boolean>,
+    key: MutableState<String>,
+    map: MutableMap<String, String>,
+    buttonText: MutableState<String?>,
+
+) {
+    dropDownMenuList(drop, key, map, buttonText)
 }
 
 @Composable
-fun dropDownMenuList(drop: MutableState<Boolean>, key: MutableState<String>, map: MutableMap<String, String>) {
+fun dropDownMenuList(
+    drop: MutableState<Boolean>,
+    key: MutableState<String>,
+    map: MutableMap<String, String>,
+    buttonText: MutableState<String?>
+) {
     DropdownMenu(
         expanded = drop.value,
         onDismissRequest = {
@@ -23,10 +34,11 @@ fun dropDownMenuList(drop: MutableState<Boolean>, key: MutableState<String>, map
             DropdownMenuItem(
                 onClick = {
                     drop.value = false
-                    key.value = u
+                    key.value = t
+                    buttonText.value = u
                 }
             ) {
-                Text(t)
+                Text(u)
             }
         }
     }

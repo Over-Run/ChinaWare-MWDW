@@ -26,7 +26,9 @@ package org.overrun.vmdw
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,8 +42,9 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
-import org.overrun.vmdw.items.DropdownMenuList
-import org.overrun.vmdw.items.SettingsDialog
+import org.overrun.vmdw.items.effect.DropdownMenuList
+import org.overrun.vmdw.items.effect.RollingEffect
+import org.overrun.vmdw.items.window.SettingsDialog
 import java.awt.Desktop
 import java.net.URI
 
@@ -86,6 +89,10 @@ fun main() {
         val width by remember { mutableStateOf(Config.get("width", "1000").toInt()) }
         val height by remember { mutableStateOf(Config.get("height", "800").toInt()) }
         val language = remember { mutableStateOf(Config.get("language", CONFIG_LANG_DEF)) }
+        val map: MutableMap<String, String> = HashMap()
+        map["en_us"] = "english[us]"
+        map["zh_cn"] = "简体中文"
+        val buttonText = remember { mutableStateOf(map[language.value]) }
         val drop = remember { mutableStateOf(false) }
         if (isOpen.value) {
             Window(
@@ -159,64 +166,58 @@ fun main() {
                 height = 640,
                 alignment = Alignment.Center
             ) {
-
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(start = 100.dp, top = 10.dp)
-                        .wrapContentSize(Alignment.TopStart)
+                val state = rememberScrollState()
+                RollingEffect(
+                    modifier =
+                        Modifier
+                            .background(Color.LightGray)
+                            .fillMaxSize()
+                ).add(
+                    Modifier.padding(end = 100.dp, bottom = 50.dp).background(Color.Red).fillMaxSize(),
                 ) {
-
-                    TextButton(
+                    val color: Color = if (state.value == 0) Color.Magenta else Color.Red
+                    Text(
+                        text = I18n["settings.language"],
+                        modifier = Modifier.background(color)
+                    )
+                }.add(
+                    Modifier
+                        .padding(start = 100.dp, end = 130.dp, top = 0.dp, bottom = 50.dp)
+                        .fillMaxSize()
+                        .background(Color.LightGray)
+                ).add(
+                    Modifier
+                        .padding(start = 130.dp,end = 100.dp, bottom = 50.dp)
+                        .background(Color.Green)
+                        .fillMaxSize()
+                        .verticalScroll(state)
+                ) {
+                    Button(
                         onClick = {
                             drop.value = true
                         },
-                        modifier = Modifier.background(Color.LightGray)
+                        modifier = Modifier
                     ) {
-                        Text(text = language.value)
+                        Text(text = buttonText.value!!)
                     }
-                    val map: MutableMap<String, String> = HashMap()
-                    map["english[us]"] =   "             en_us             "
-                    map["简体中文"] =       "             zh_cn             "
-                    DropdownMenuList(drop, language, map)
+                    Row {
+                        DropdownMenuList(drop, language, map, buttonText)
+                    }
 
-//                    DropdownMenu(
-//                        expanded = drop.value,
-//                        onDismissRequest = {
-//                            drop.value = !drop.value
-//                        }
-//                    ) {
-//                        DropdownMenuItem(
-//                            onClick = {
-//                                drop.value = false
-//                                language.value = "     en_us     "
-//
-//                            }
-//                        ) {
-//                            Text(text = "english[us]")
-//
-//                        }
-//                        DropdownMenuItem(
-//                            onClick = {
-//                                drop.value = false
-//                                language.value = "     zh_cn     "
-//                            }
-//                        ) {
-//                            Text(text = "简体中文")
-//
-//                        }
-//
-//                    }
-                }
+                    repeat(100) {
+                        Text("test${it + 1}")
+                    }
+                }.build()
                 Button(
                     onClick = { isSettingOpen.value = false },
                     modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.BottomCenter)
                 ) {
-                    Text("save")
+                    Text(I18n["settings.save"])
                     Config.set { it.language = language.value.trim() }
                     I18n.init()
                     Config.save()
                 }
+
             }
         }
     }
