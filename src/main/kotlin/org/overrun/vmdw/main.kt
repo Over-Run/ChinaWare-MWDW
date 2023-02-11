@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
+import org.overrun.vmdw.items.effect.DiscoloredText
 import org.overrun.vmdw.items.effect.DropdownMenuList
 import org.overrun.vmdw.items.effect.RollingEffect
 import org.overrun.vmdw.items.window.SettingsDialog
@@ -175,10 +176,12 @@ fun main() {
                 ).add(
                     Modifier.padding(end = 100.dp, bottom = 50.dp).background(Color.Red).fillMaxSize(),
                 ) {
-                    val color: Color = if (state.value == 0) Color.Magenta else Color.Red
-                    Text(
-                        text = I18n["settings.language"],
-                        modifier = Modifier.background(color)
+                    DiscoloredText(
+                        state = state,
+                        color = Color.Red,
+                        color1 = Color.Magenta,
+                        i = 0,
+                        text = I18n["settings.language"]
                     )
                 }.add(
                     Modifier

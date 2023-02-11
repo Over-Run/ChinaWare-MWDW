@@ -1,13 +1,23 @@
 package org.overrun.vmdw.items.effect
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
-class DiscoloredText(
-    val state: ScrollState
+@Composable
+fun DiscoloredText(
+    state: ScrollState,
+    color: Color,
+    color1: Color,
+    i: Int,
+    text: String
 ) {
-
-    fun add() {
-        val color: Color = if (state.value == 0) Color.Magenta else Color.Red
-    }
+    val color2 = if (state.value == i) { color1 } else { color }
+    Text(
+        text = text,
+        modifier = Modifier.background(color2)
+    )
 }
