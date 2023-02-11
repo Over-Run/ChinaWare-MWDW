@@ -171,10 +171,9 @@ fun main() {
                 RollingEffect(
                     modifier =
                         Modifier
-                            .background(Color.LightGray)
                             .fillMaxSize()
                 ).add(
-                    Modifier.padding(end = 100.dp, bottom = 50.dp).background(Color.Red).fillMaxSize(),
+                    Modifier.padding(end = 700.dp, bottom = 50.dp).background(Color.Red).fillMaxSize(),
                 ) {
                     DiscoloredText(
                         state = state,
@@ -187,7 +186,6 @@ fun main() {
                     Modifier
                         .padding(start = 100.dp, end = 130.dp, top = 0.dp, bottom = 50.dp)
                         .fillMaxSize()
-                        .background(Color.LightGray)
                 ).add(
                     Modifier
                         .padding(start = 130.dp,end = 100.dp, bottom = 50.dp)
@@ -205,10 +203,6 @@ fun main() {
                     }
                     Row {
                         DropdownMenuList(drop, language, map, buttonText)
-                    }
-
-                    repeat(100) {
-                        Text("test${it + 1}")
                     }
                 }.build()
                 Button(

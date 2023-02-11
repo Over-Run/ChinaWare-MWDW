@@ -12,11 +12,16 @@ class RollingEffect(
             .background(Color.LightGray)
             .fillMaxSize(),
 ) {
-    val map: MutableMap<Int, Record> = HashMap()
+    private val map: MutableMap<Int, Record> = HashMap()
     @Composable
     fun add(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit = {}): RollingEffect {
         map[map.size] = Record(modifier, content)
         return this
+    }
+
+    @Composable
+    fun remove(int: Int) {
+        map.remove(int)
     }
 
     @Composable
