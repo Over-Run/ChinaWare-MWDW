@@ -127,7 +127,6 @@ fun settings(mode: MutableState<String>, map: MutableMap<String, String>, langua
             modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.BottomCenter)
         ) {
             Text(I18n["settings.save"])
-
         }
     }
     return {}

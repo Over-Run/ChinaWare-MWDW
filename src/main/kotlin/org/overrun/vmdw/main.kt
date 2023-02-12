@@ -130,8 +130,5 @@ fun main() {
             "about" -> about(mode)
             "settings" -> settings(mode, map, language)
         }
-        if (isSettingOpen.value) {
-
-        }
     }
 }
