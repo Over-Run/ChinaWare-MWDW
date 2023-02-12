@@ -12,17 +12,17 @@ import org.overrun.vmdw.I18n
 
 @Composable
 fun SettingsDialog(
-    isSettingOpen: MutableState<Boolean>,
+    mode: MutableState<String>,
     key: String = "dialog.settings.title",
     width: Int, height: Int, alignment: Alignment,
     content: @Composable DialogWindowScope.() -> Unit
 ) {
-    dialog(isSettingOpen, key, width, height, alignment, content)
+    dialog(mode, key, width, height, alignment, content)
 }
 
 @Composable
 fun dialog(
-    isSettingOpen: MutableState<Boolean>,
+    mode: MutableState<String>,
     key: String,
     width: Int, height: Int,
     alignment: Alignment,
@@ -30,7 +30,7 @@ fun dialog(
 ) {
     Dialog(
         onCloseRequest = {
-            isSettingOpen.value= !isSettingOpen.value
+            mode.value = "off"
         },
         title = I18n[key],
         state = DialogState(

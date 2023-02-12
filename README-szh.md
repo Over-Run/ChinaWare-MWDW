@@ -7,6 +7,7 @@
 - 方便、安全
 
 ## 特性
+支持语言:英语和中文
 
 ## 鸣谢
 
@@ -17,3 +18,4 @@
 3. 修改
 4. `git commit` & `git push`
 5. 创建 [PR](https://github.com/Over-Run/ChinaWare-VMDW/pulls)
+

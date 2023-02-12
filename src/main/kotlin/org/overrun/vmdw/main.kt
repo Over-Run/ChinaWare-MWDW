@@ -24,30 +24,27 @@
 
 package org.overrun.vmdw
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.ExperimentalUnitApi
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import org.overrun.vmdw.config.BuildSrc
 import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
-import org.overrun.vmdw.items.effect.DiscoloredText
-import org.overrun.vmdw.items.effect.DropdownMenuList
-import org.overrun.vmdw.items.effect.RollingEffect
-import org.overrun.vmdw.items.window.SettingsDialog
-import java.awt.Desktop
-import java.net.URI
 
 /**
  * @author baka4n, squid233
@@ -82,6 +79,7 @@ fun main() {
     // Note: Do NOT use expression body. That cause the initialization reruns.
     Config.init()
     I18n.init()
+    BuildSrc.init()
 
     application {
         val isOpen = remember { mutableStateOf(true) }
@@ -91,10 +89,9 @@ fun main() {
         val height by remember { mutableStateOf(Config.get("height", "800").toInt()) }
         val language = remember { mutableStateOf(Config.get("language", CONFIG_LANG_DEF)) }
         val map: MutableMap<String, String> = HashMap()
+        val mode = remember { mutableStateOf("off") }
         map["en_us"] = "english[us]"
         map["zh_cn"] = "简体中文"
-        val buttonText = remember { mutableStateOf(map[language.value]) }
-        val drop = remember { mutableStateOf(false) }
         if (isOpen.value) {
             Window(
                 onCloseRequest = { isOpen.value = false },
@@ -112,110 +109,29 @@ fun main() {
                             mnemonic = 'T',
                             shortcut = KeyShortcut(Key.S, ctrl = true, alt = true),
                         ) {
-                            isSettingOpen.value = true
+//                            isSettingOpen.value = true
+                            mode.value = "settings"
                         }
                         Item(I18n["menu.file.exit"], mnemonic = 'X') { isOpen.value = false }
                     }
                     Menu(I18n["menu.edit"], mnemonic = 'E') { }
                     Menu(I18n["menu.view"], mnemonic = 'V') { }
                     Menu(I18n["menu.help"], mnemonic = 'H') {
-                        Item(I18n["menu.help.about"], mnemonic = 'A') { isAboutOpen = true }
+                        Item(I18n["menu.help.about"], mnemonic = 'A') {
+//                            isAboutOpen = true
+                            mode.value = "about"
+                        }
                     }
                 }
                 windowContent(this)
             }
         }
-        if (isAboutOpen) {
-            Dialog(
-                onCloseRequest = { isAboutOpen = false },
-                title = I18n["dialog.about.title"],
-                state = DialogState(
-                    width = 300.dp,
-                    height = 300.dp,
-                    position = WindowPosition(Alignment.Center)
-                )
-            ) {
-                // 关于内容
-                Column {
-                    TextButton(
-                        onClick = {
-                            if (Desktop.isDesktopSupported()) {
-                                Desktop.getDesktop().also {
-                                    if (it.isSupported(Desktop.Action.BROWSE)) {
-                                        it.browse(URI.create("https://github.com/Over-Run/ChinaWare-VMDW"))
-                                    }
-                                }
-                            }
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        shape = RoundedCornerShape(1.dp)
-                    ) {
-                        Text(
-                            text = "ChinaWare VMDW",
-                            color = Color.Blue,
-                            fontSize = TextUnit(12f, TextUnitType.Sp))
-                    }
-                    Text(text = "  ChinaWare VMDW full name is ChinaWare Visualize Minecraft Development Wheel")
-                }
-            }
+        when(mode.value) {
+            "about" -> about(mode)
+            "settings" -> settings(mode, map, language)
         }
-
         if (isSettingOpen.value) {
-            SettingsDialog(
-                isSettingOpen = isSettingOpen,
-                width = 800,
-                height = 640,
-                alignment = Alignment.Center
-            ) {
-                val state = rememberScrollState()
-                RollingEffect(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                ).add(
-                    Modifier.padding(end = 700.dp, bottom = 50.dp).background(Color.Red).fillMaxSize(),
-                ) {
-                    DiscoloredText(
-                        state = state,
-                        color = Color.Red,
-                        color1 = Color.Magenta,
-                        i = 0,
-                        text = I18n["settings.language"]
-                    )
-                }.add(
-                    Modifier
-                        .padding(start = 100.dp, end = 130.dp, top = 0.dp, bottom = 50.dp)
-                        .fillMaxSize()
-                ).add(
-                    Modifier
-                        .padding(start = 130.dp,end = 100.dp, bottom = 50.dp)
-                        .background(Color.Green)
-                        .fillMaxSize()
-                        .verticalScroll(state)
-                ) {
-                    Button(
-                        onClick = {
-                            drop.value = true
-                        },
-                        modifier = Modifier
-                    ) {
-                        Text(text = buttonText.value!!)
-                    }
-                    Row {
-                        DropdownMenuList(drop, language, map, buttonText)
-                    }
-                }.build()
-                Button(
-                    onClick = { isSettingOpen.value = false },
-                    modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.BottomCenter)
-                ) {
-                    Text(I18n["settings.save"])
-                    Config.set { it.language = language.value.trim() }
-                    I18n.init()
-                    Config.save()
-                }
 
-            }
         }
     }
 }
