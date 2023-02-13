@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogState
 import androidx.compose.ui.window.WindowPosition
@@ -41,7 +40,8 @@ fun about(mode: MutableState<String>) {
             width = 300.dp,
             height = 300.dp,
             position = WindowPosition(Alignment.Center)
-        )
+        ),
+         resizable = false
     ) {
         // 关于内容
         Column {
