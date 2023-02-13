@@ -4,15 +4,21 @@ import java.io.*
 import java.util.*
 
 object BuildSrc {
-    private val dir = File(System.getProperty("user.dir"), ".vmdw/buildSrc")
+    var build: Build? = null
+    fun load(fileName: String) {
+        build = Build(fileName)
+    }
+}
+
+class Build(fileName: String) {
+    private val dir = File(System.getProperty("user.dir"), ".vmdw/buildSrc/${fileName}")
     init {
         if (!dir.exists()) dir.mkdirs()
     }
     val modSettings = File(dir, "modSettings.properties")
     var propertiesTools: PropertiesTools = PropertiesTools(modSettings)
-    var getModSettings: GetModSettings? = null
-
-    fun init() {
+    var getModSettings: GetModSettings
+    init {
         propertiesTools.init()
         getModSettings = GetModSettings(propertiesTools)
     }
@@ -21,6 +27,10 @@ object BuildSrc {
 class GetModSettings(var propertiesTools: PropertiesTools) {
     fun setModid(modid: String) {
         propertiesTools.put("modid", modid)
+    }
+
+    fun setContributors(contributors: String) {
+        propertiesTools.put("contributors", contributors)
     }
     fun setAuthors(vararg authors: String) {
         val sb = StringBuilder()
@@ -44,7 +54,7 @@ class PropertiesTools(private val f: File): Properties() {
             load()
         } catch (e: FileNotFoundException) {
             try {
-                save("save Config.")
+                save("save mod settings.")
             } catch (f: IOException) {
                 f.printStackTrace()
             }

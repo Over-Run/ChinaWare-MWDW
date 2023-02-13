@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -39,10 +38,8 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import org.overrun.vmdw.config.BuildSrc
 import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
 
@@ -74,17 +71,14 @@ fun windowContent(scope: FrameWindowScope) = scope.run {
  * @author squid233, baka4n
  * @since 0.1.0
  */
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class, ExperimentalUnitApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     // Note: Do NOT use expression body. That cause the initialization reruns.
     Config.init()
     I18n.init()
-    BuildSrc.init()
 
     application {
         val isOpen = remember { mutableStateOf(true) }
-        var isAboutOpen by remember { mutableStateOf(false) }
-        val isSettingOpen: MutableState<Boolean> = remember { mutableStateOf(false) }
         val width by remember { mutableStateOf(Config.get("width", "1000").toInt()) }
         val height by remember { mutableStateOf(Config.get("height", "800").toInt()) }
         val language = remember { mutableStateOf(Config.get("language", CONFIG_LANG_DEF)) }
@@ -104,6 +98,13 @@ fun main() {
             ) {
                 MenuBar {
                     Menu(I18n["menu.file"], mnemonic = 'F') {
+                        Item(
+                            I18n["menu.file.create"],
+                            mnemonic = 'C',
+                            shortcut = KeyShortcut(Key.C, ctrl = true, alt = true)
+                        ) {
+                            mode.value = "create"
+                        }
                         Item(
                             I18n["menu.file.settings"],
                             mnemonic = 'T',
@@ -129,6 +130,7 @@ fun main() {
         when(mode.value) {
             "about" -> about(mode)
             "settings" -> settings(mode, map, language)
+            "create" -> create(mode)
         }
     }
 }

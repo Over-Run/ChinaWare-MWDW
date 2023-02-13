@@ -1,13 +1,21 @@
 {
+  "button.create": "create",
+  "create.authors.title": "authors",
+  "create.author.text.field.tooltip": "The authors uses ',' to separate",
+  "create.contributor.title": "contributors",
+  "create.contributor.text.field.tooltip": "The contributors uses ',' to separate",
+  "create.modid.title": "modid",
+  "create.modid.text.field.tooltip": "Please enter lowercase letters, numbers and '-' or '_' (beginning with a letter)",
+  "dialog.about.title": "About ChinaWare-VMDW",
+  "dialog.settings.title": "settings",
   "menu.file": "File",
+  "menu.file.create": "create mod",
   "menu.file.settings": "Settings",
   "menu.file.exit": "Exit",
   "menu.edit": "Edit",
   "menu.view": "View",
   "menu.help": "Help",
   "menu.help.about": "About",
-  "dialog.about.title": "About ChinaWare-VMDW",
-  "dialog.settings.title": "settings",
-  "settings.save": "save",
-  "settings.language": "Language"
+  "settings.language": "Language",
+  "settings.save": "save"
 }

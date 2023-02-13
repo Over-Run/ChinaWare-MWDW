@@ -22,13 +22,96 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogState
 import androidx.compose.ui.window.WindowPosition
+import org.overrun.vmdw.config.BuildSrc
 import org.overrun.vmdw.config.Config
 import org.overrun.vmdw.items.effect.DiscoloredText
 import org.overrun.vmdw.items.effect.DropdownMenuList
 import org.overrun.vmdw.items.effect.RollingEffect
+import org.overrun.vmdw.items.effect.RowTextAndFieldEffect
 import org.overrun.vmdw.items.window.SettingsDialog
 import java.awt.Desktop
 import java.net.URI
+
+@OptIn(ExperimentalUnitApi::class)
+@Composable
+fun create(mode: MutableState<String>) {
+    Dialog(
+        onCloseRequest = {mode.value = "off"},
+        title = I18n["menu.file.create"],
+        state = DialogState(
+            width = 380.dp,
+            height = 400.dp,
+            position = WindowPosition(Alignment.Center)
+        ),
+        resizable = false
+    ) {
+        val modid = remember { mutableStateOf("") }
+        val authors = remember { mutableStateOf("") }
+        RollingEffect(
+            modifier = Modifier.fillMaxSize().padding(start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
+        ).add(
+            modifier = Modifier.padding(start = 0.dp, end = 0.dp, top = 0.dp, bottom = 100.dp)
+        ) {
+            RowTextAndFieldEffect(
+                text = I18n["create.modid.title"],
+                vauleModel = modid,
+                tooltipText = I18n["create.modid.text.field.tooltip"],
+                textUnit = TextUnit(12f, TextUnitType.Sp),
+                t = {
+                    var b = false
+                    if (it.isEmpty()) b = true else
+                        for (i in it.indices) {
+                            val c = it[i]
+                            if (
+                                c in 'a'..'z' ||
+                                c in 'A'..'Z' ||
+                                c in '_'..'_' ||
+                                c in '-'..'-'
+                            ) b = true
+                        }
+
+
+                    when {
+                        b -> modid.value = it
+                        else -> {
+                            if (it.length < modid.value.length)
+                                modid.value = modid.value.substring(0, modid.value.length - 2)
+                            else
+                                modid.value = modid.value
+                        }
+                    }
+
+                }
+            )
+            RowTextAndFieldEffect(
+                text = I18n["create.authors.title"],
+                vauleModel = authors,
+                tooltipText = I18n["create.author.text.field.tooltip"],
+                textUnit = TextUnit(12f, TextUnitType.Sp)
+            )
+            RowTextAndFieldEffect(
+                text = I18n["create.contributor.title"],
+                vauleModel = authors,
+                tooltipText = I18n["create.contributor.text.field.tooltip"],
+                textUnit = TextUnit(12f, TextUnitType.Sp)
+            )
+
+            Button(
+                onClick = {
+                    BuildSrc.load(modid.value)
+                    BuildSrc.build!!.getModSettings.setModid(modid.value)
+                    BuildSrc.build!!.getModSettings.setAuthors(authors.value)
+                    BuildSrc.build!!.propertiesTools.save("save mod settings.")
+                    mode.value = "off"
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(I18n["button.create"])
+            }
+        }.build()
+
+    }
+}
 
 @OptIn(ExperimentalUnitApi::class)
 @Composable
