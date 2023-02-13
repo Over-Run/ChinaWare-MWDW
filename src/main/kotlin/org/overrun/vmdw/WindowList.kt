@@ -33,8 +33,8 @@ import java.net.URI
 
 @OptIn(ExperimentalUnitApi::class)
 @Composable
-fun about(mode: MutableState<String>): @Composable ApplicationScope.() -> Unit {
-    Dialog(
+fun about(mode: MutableState<String>) {
+     Dialog(
         onCloseRequest = { mode.value = "off" },
         title = I18n["dialog.about.title"],
         state = DialogState(
@@ -67,10 +67,9 @@ fun about(mode: MutableState<String>): @Composable ApplicationScope.() -> Unit {
             Text(text = "  ChinaWare VMDW full name is ChinaWare Visualize Minecraft Development Wheel")
         }
     }
-    return {}
 }
 @Composable
-fun settings(mode: MutableState<String>, map: MutableMap<String, String>, language: MutableState<String>) : @Composable ApplicationScope.() -> Unit {
+fun settings(mode: MutableState<String>, map: MutableMap<String, String>, language: MutableState<String>) {
     val buttonText = remember { mutableStateOf(map[language.value]) }
     val drop = remember { mutableStateOf(false) }
     SettingsDialog(
@@ -129,5 +128,4 @@ fun settings(mode: MutableState<String>, map: MutableMap<String, String>, langua
             Text(I18n["settings.save"])
         }
     }
-    return {}
 }
