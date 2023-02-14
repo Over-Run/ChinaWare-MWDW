@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package org.overrun.vmdw
 
 import androidx.compose.foundation.background
@@ -31,9 +33,13 @@ import org.overrun.vmdw.items.window.SettingsDialog
 import java.awt.Desktop
 import java.net.URI
 
+
+
 const val message = "Dialog has the effect of not being displayed on the taskbar, which often causes unpredictable errors"
 const val pack = "org.overrun.vmdw."
-@Suppress("DuplicatedCode")
+/**
+ * @author baka4n
+ */
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 fun newCreate(mode: MutableState<String>) {
@@ -114,8 +120,9 @@ fun newCreate(mode: MutableState<String>) {
         }.build()
     }
 }
-
-@Suppress("DuplicatedCode")
+/**
+ * @author baka4n
+ */
 @Deprecated(
     message = message,
     replaceWith = ReplaceWith(
@@ -204,8 +211,10 @@ fun create(mode: MutableState<String>) {
 
     }
 }
+/**
+ * @author baka4n
+ */
 
-@Suppress("DuplicatedCode")
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 fun newAbout(mode: MutableState<String>) {
@@ -245,8 +254,10 @@ fun newAbout(mode: MutableState<String>) {
         }
     }
 }
+/**
+ * @author baka4n
+ */
 
-@Suppress("DuplicatedCode")
 @Deprecated(
     message = message ,
     replaceWith = ReplaceWith(
@@ -294,7 +305,7 @@ fun about(mode: MutableState<String>) {
     }
 }
 
-@Suppress("DuplicatedCode")
+
 @Composable
 fun newSettings(mode: MutableState<String>,map: MutableMap<String, String>, language: MutableState<String>) {
     val buttonText = remember { mutableStateOf(map[language.value]) }
@@ -360,7 +371,7 @@ fun newSettings(mode: MutableState<String>,map: MutableMap<String, String>, lang
         }
     }
 }
-@Suppress("DuplicatedCode")
+
 @Deprecated(
     message = message,
     replaceWith = ReplaceWith(
