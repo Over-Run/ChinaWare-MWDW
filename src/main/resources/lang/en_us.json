@@ -11,6 +11,7 @@
   "menu.file": "File",
   "menu.file.create": "create mod",
   "menu.file.open": "open",
+  "menu.file.close": "close",
   "menu.file.settings": "Settings",
   "menu.file.exit": "Exit",
   "menu.edit": "Edit",

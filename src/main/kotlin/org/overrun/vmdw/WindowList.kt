@@ -42,7 +42,7 @@ const val pack = "org.overrun.vmdw."
  */
 @OptIn(ExperimentalUnitApi::class)
 @Composable
-fun newCreate(mode: MutableState<String>) {
+fun newCreate(mode: MutableState<String>, isOpenFile: MutableState<Boolean>) {
     Window(
         onCloseRequest = {mode.value = "off"},
         title = I18n["menu.file.create"],
@@ -56,6 +56,7 @@ fun newCreate(mode: MutableState<String>) {
     ) {
         val modid = remember { mutableStateOf("") }
         val authors = remember { mutableStateOf("") }
+        val contributors = remember { mutableStateOf("") }
         RollingEffect(
             modifier = Modifier.fillMaxSize().padding(start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
         ).add(
@@ -100,18 +101,27 @@ fun newCreate(mode: MutableState<String>) {
             )
             RowTextAndFieldEffect(
                 text = I18n["create.contributor.title"],
-                vauleModel = authors,
+                vauleModel = contributors,
                 tooltipText = I18n["create.contributor.text.field.tooltip"],
                 textUnit = TextUnit(12f, TextUnitType.Sp)
             )
 
             Button(
                 onClick = {
-                    BuildSrc.load(modid.value)
-                    BuildSrc.build!!.getModSettings.setModid(modid.value)
-                    BuildSrc.build!!.getModSettings.setAuthors(authors.value)
-                    BuildSrc.build!!.propertiesTools.save("save mod settings.")
-                    mode.value = "off"
+                    if (modid.value.isNotEmpty() && authors.value.isNotEmpty()) {
+                        BuildSrc.load(modid.value)
+                        BuildSrc.build!!.getModSettings.setModid(modid.value)
+                        BuildSrc.build!!.getModSettings.setAuthors(authors.value)
+                        BuildSrc.build!!.getModSettings.setContributors(contributors.value)
+                        BuildSrc.build!!.propertiesTools.save("save mod settings.")
+                        BuildSrc.openDirection = BuildSrc.build!!.dir
+                        if (BuildSrc.openDirection != null) {
+                            isOpenFile.value = !isOpenFile.value
+                        }
+                        mode.value = "off"
+                    }
+
+
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {

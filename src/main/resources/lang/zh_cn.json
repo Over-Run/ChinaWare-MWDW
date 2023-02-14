@@ -11,6 +11,7 @@
   "menu.file": "文件[F]",
   "menu.file.create": "创建模组",
   "menu.file.open": "打开",
+  "menu.file.close": "关闭",
   "menu.file.settings": "设置[T]",
   "menu.file.exit": "退出[X]",
   "menu.edit": "编辑[E]",

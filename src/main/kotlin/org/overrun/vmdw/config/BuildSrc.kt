@@ -32,16 +32,27 @@ import java.util.*
  */
 object BuildSrc {
     var build: Build? = null
+    var openDirection: File? = null
+        get() {
+            return field
+        }
+        set(value) {
+            field = value
+        }
+
     fun load(fileName: String) {
         build = Build(fileName)
     }
+
+
 }
 
 /**
  * @author baka4n
  */
 class Build(fileName: String) {
-    private val dir = File(System.getProperty("user.dir"), ".vmdw/buildSrc/${fileName}")
+    val dir = File(System.getProperty("user.dir"), ".vmdw/buildSrc/${fileName}")
+        get() = field
     init {
         if (!dir.exists()) dir.mkdirs()
     }

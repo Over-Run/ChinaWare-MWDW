@@ -40,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import org.overrun.vmdw.config.BuildSrc
 import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
 
@@ -90,6 +91,8 @@ fun main() {
         val width by remember { mutableStateOf(Config.get("width", "1000").toInt()) }
         val height by remember { mutableStateOf(Config.get("height", "800").toInt()) }
         val language = remember { mutableStateOf(Config.get("language", CONFIG_LANG_DEF)) }
+        val isOpenFile: MutableState<Boolean> = remember { mutableStateOf(true) }
+        val isCloseFile: MutableState<Boolean> = remember { mutableStateOf(true) }
         val map: MutableMap<String, String> = HashMap()
         val mode = remember { mutableStateOf("off") }
         map["en_us"] = "english[us]"
@@ -109,7 +112,8 @@ fun main() {
                         Item(
                             I18n["menu.file.create"],
                             mnemonic = 'C',
-                            shortcut = KeyShortcut(Key.C, ctrl = true, alt = true)
+                            shortcut = KeyShortcut(Key.C, ctrl = true, alt = true),
+                            enabled = isOpenFile.value
                         ) {
                             mode.setMode("create")
                         }
@@ -118,6 +122,15 @@ fun main() {
                             mnemonic = 'O',
                             shortcut = KeyShortcut(Key.O, ctrl = true, shift = true, alt = true)
                         ) {
+                            mode.setMode("open")
+                        }
+                        Item(
+                            I18n["menu.file.close"],
+                            mnemonic = 'C',
+                            enabled = !isOpenFile.value
+                        ) {
+                            BuildSrc.openDirection = null
+                            isOpenFile.value = !isOpenFile.value
                         }
                         Item(
                             I18n["menu.file.settings"],
@@ -144,7 +157,7 @@ fun main() {
         when(mode.value) {
             "about" -> newAbout(mode)
             "settings" -> newSettings(mode, map, language)
-            "create" -> newCreate(mode)
+            "create" -> newCreate(mode, isOpenFile)
             "open" -> Unit
         }
     }
