@@ -119,7 +119,8 @@ fun newCreate(mode: MutableState<String>) {
     replaceWith = ReplaceWith(
         expression = "newCreate(mode)",
         imports = [pack + "newCreate"]
-    )
+    ),
+    level = DeprecationLevel.HIDDEN
 )
 @OptIn(ExperimentalUnitApi::class)
 @Composable
@@ -247,7 +248,8 @@ fun newAbout(mode: MutableState<String>) {
     replaceWith = ReplaceWith(
          expression = "newAbout(mode)",
         imports = [pack + "newAbout"]
-    )
+    ),
+    level = DeprecationLevel.HIDDEN
 )
 @OptIn(ExperimentalUnitApi::class)
 @Composable
@@ -358,7 +360,8 @@ fun newSettings(mode: MutableState<String>,map: MutableMap<String, String>, lang
     replaceWith = ReplaceWith(
         expression = "newSettings(mode, map, language)",
         imports = [pack + "newSettings"]
-    )
+    ),
+    level = DeprecationLevel.HIDDEN
 )
 @Composable
 fun settings(mode: MutableState<String>, map: MutableMap<String, String>, language: MutableState<String>) {
