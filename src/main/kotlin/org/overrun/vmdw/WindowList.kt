@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.ExperimentalUnitApi
@@ -31,12 +32,27 @@ import org.overrun.vmdw.items.effect.RollingEffect
 import org.overrun.vmdw.items.effect.RowTextAndFieldEffect
 import org.overrun.vmdw.items.window.SettingsDialog
 import java.awt.Desktop
+import java.io.File
 import java.net.URI
-
+import javax.swing.JFileChooser
 
 
 const val message = "Dialog has the effect of not being displayed on the taskbar, which often causes unpredictable errors"
 const val pack = "org.overrun.vmdw."
+
+/**
+ * @author baka4n
+ * Use swing -> JFileChooser class
+ */
+fun fileOpen(mode: MutableState<String>) {
+    JFileChooser(File(System.getProperty("user.dir"))).apply {
+        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        showOpenDialog(ComposeWindow())
+        BuildSrc.openDirection = selectedFile?.absoluteFile
+        mode.value = "off"
+    }
+
+}
 /**
  * @author baka4n
  */

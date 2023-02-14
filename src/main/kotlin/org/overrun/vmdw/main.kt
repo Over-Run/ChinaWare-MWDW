@@ -159,7 +159,7 @@ fun main() {
             "about" -> newAbout(mode)
             "settings" -> newSettings(mode, map, language)
             "create" -> newCreate(mode, isOpenFile)
-            "open" -> Unit
+            "open" -> fileOpen(mode)
         }
     }
 }
