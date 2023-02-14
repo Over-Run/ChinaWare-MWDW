@@ -120,7 +120,8 @@ fun main() {
                         Item(
                             I18n["menu.file.open"],
                             mnemonic = 'O',
-                            shortcut = KeyShortcut(Key.O, ctrl = true, shift = true, alt = true)
+                            shortcut = KeyShortcut(Key.O, ctrl = true, shift = true, alt = true),
+                            enabled = isOpenFile.value
                         ) {
                             mode.setMode("open")
                         }
