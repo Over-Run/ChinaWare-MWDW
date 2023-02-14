@@ -63,8 +63,16 @@ fun windowContent(scope: FrameWindowScope) = scope.run {
             }
         }
     }
+}
 
-
+/**
+ * @author baka4n
+ * @since 无法同时打开关于,创建,设置窗口
+ */
+fun MutableState<String>.setMode(string: String) {
+    if (this.value == "off") {
+        this.value = string
+    }
 }
 
 /**
@@ -103,7 +111,7 @@ fun main() {
                             mnemonic = 'C',
                             shortcut = KeyShortcut(Key.C, ctrl = true, alt = true)
                         ) {
-                            mode.value = "create"
+                            mode.setMode("create")
                         }
                         Item(
                             I18n["menu.file.settings"],
@@ -111,7 +119,7 @@ fun main() {
                             shortcut = KeyShortcut(Key.S, ctrl = true, alt = true),
                         ) {
 //                            isSettingOpen.value = true
-                            mode.value = "settings"
+                            mode.setMode("settings")
                         }
                         Item(I18n["menu.file.exit"], mnemonic = 'X') { isOpen.value = false }
                     }
@@ -120,7 +128,7 @@ fun main() {
                     Menu(I18n["menu.help"], mnemonic = 'H') {
                         Item(I18n["menu.help.about"], mnemonic = 'A') {
 //                            isAboutOpen = true
-                            mode.value = "about"
+                            mode.setMode("about")
                         }
                     }
                 }
@@ -128,9 +136,9 @@ fun main() {
             }
         }
         when(mode.value) {
-            "about" -> about(mode)
-            "settings" -> settings(mode, map, language)
-            "create" -> create(mode)
+            "about" -> newAbout(mode)
+            "settings" -> newSettings(mode, map, language)
+            "create" -> newCreate(mode)
         }
     }
 }
