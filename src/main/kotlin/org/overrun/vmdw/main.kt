@@ -114,6 +114,12 @@ fun main() {
                             mode.setMode("create")
                         }
                         Item(
+                            I18n["menu.file.open"],
+                            mnemonic = 'O',
+                            shortcut = KeyShortcut(Key.O, ctrl = true, shift = true, alt = true)
+                        ) {
+                        }
+                        Item(
                             I18n["menu.file.settings"],
                             mnemonic = 'T',
                             shortcut = KeyShortcut(Key.S, ctrl = true, alt = true),
@@ -139,6 +145,7 @@ fun main() {
             "about" -> newAbout(mode)
             "settings" -> newSettings(mode, map, language)
             "create" -> newCreate(mode)
+            "open" -> Unit
         }
     }
 }

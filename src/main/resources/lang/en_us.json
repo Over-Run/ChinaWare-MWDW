@@ -10,6 +10,7 @@
   "dialog.settings.title": "settings",
   "menu.file": "File",
   "menu.file.create": "create mod",
+  "menu.file.open": "open",
   "menu.file.settings": "Settings",
   "menu.file.exit": "Exit",
   "menu.edit": "Edit",
