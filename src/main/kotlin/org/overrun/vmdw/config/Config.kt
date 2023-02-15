@@ -42,15 +42,21 @@ const val CONFIG_LANG_DEF = "en_us"
 object Config {
     var language: String = CONFIG_LANG_DEF
         set
+    var last_mod: String = ""
+        set
+    var is_open_last_mod = true
+        set
     val file = File(System.getProperty("user.dir"), ".vmdw/config.json")
-    private val configMap: MutableMap<String, String> = HashMap()
+    private val configMap = HashMap<String, String>()
 
-    fun get(key: String, def: String): String = configMap.getOrDefault(key, def)
-    operator fun get(key: String): String? = configMap[key]
+    fun get(key: String, def: Comparable<*>): Comparable<*> = configMap.getOrDefault(key, def)
+    operator fun get(key: String): Comparable<*>? = configMap[key]
 
     fun set(autoSave: Boolean = true, action: (Config) -> Unit) {
         action(this)
         configMap[CONFIG_LANG_KEY] = language
+        configMap["last_mod"] = last_mod
+        configMap["is_open_last_mod"] = is_open_last_mod.toString()
         if (autoSave) save()
     }
 
@@ -68,11 +74,14 @@ object Config {
      * load config.json
      */
     @OptIn(ExperimentalSerializationApi::class)
+
     fun load() {
         file.inputStream().buffered().use {
             configMap.putAll(Json.decodeFromStream(it))
         }
-        language = get(CONFIG_LANG_KEY, CONFIG_LANG_DEF)
+        language = get(CONFIG_LANG_KEY, CONFIG_LANG_DEF) as String
+        last_mod = get("last_mod", "") as String
+        is_open_last_mod = get("is_open_last_mod", "true") as Boolean
     }
 
     /**

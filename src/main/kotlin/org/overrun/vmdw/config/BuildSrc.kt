@@ -52,7 +52,7 @@ object BuildSrc {
  */
 class Build(fileName: String) {
     val dir = File(System.getProperty("user.dir"), ".vmdw/buildSrc/${fileName}")
-        get() = field
+
     init {
         if (!dir.exists()) dir.mkdirs()
     }

@@ -5,22 +5,23 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 
 @Composable
 fun DropdownMenuList(
     drop: MutableState<Boolean>,
-    key: MutableState<String>,
+    key: SnapshotStateMap<String, String>,
     map: MutableMap<String, String>,
     buttonText: MutableState<String?>,
 
-) {
+    ) {
     dropDownMenuList(drop, key, map, buttonText)
 }
 
 @Composable
 fun dropDownMenuList(
     drop: MutableState<Boolean>,
-    key: MutableState<String>,
+    key: SnapshotStateMap<String, String>,
     map: MutableMap<String, String>,
     buttonText: MutableState<String?>
 ) {
@@ -34,7 +35,7 @@ fun dropDownMenuList(
             DropdownMenuItem(
                 onClick = {
                     drop.value = false
-                    key.value = t
+                    key["language"] = t
                     buttonText.value = u
                 }
             ) {

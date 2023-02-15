@@ -31,18 +31,16 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyShortcut
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import org.overrun.vmdw.config.BuildSrc
 import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
+import java.io.File
 
 /**
  * @author baka4n, squid233
@@ -66,6 +64,12 @@ fun windowContent(scope: FrameWindowScope) = scope.run {
     }
 }
 
+fun SnapshotStateMap<String, String>.setMode(string: String) {
+    if (this["mode"]!! == "off") {
+        this["mode"] = string
+    }
+}
+
 /**
  * @author baka4n
  * @since 无法同时打开关于,创建,设置窗口
@@ -85,81 +89,53 @@ fun main() {
     // Note: Do NOT use expression body. That cause the initialization reruns.
     Config.init()
     I18n.init()
+    val a: Comparable<*> = if (true) 1 else "aa"
 
     application {
-        val isOpen = remember { mutableStateOf(true) }
-        val width by remember { mutableStateOf(Config.get("width", "1000").toInt()) }
-        val height by remember { mutableStateOf(Config.get("height", "800").toInt()) }
-        val language = remember { mutableStateOf(Config.get("language", CONFIG_LANG_DEF)) }
-        val isOpenFile: MutableState<Boolean> = remember { mutableStateOf(true) }
-        val isCloseFile: MutableState<Boolean> = remember { mutableStateOf(true) }
-        val map: MutableMap<String, String> = HashMap()
-        val mode = remember { mutableStateOf("off") }
-        map["en_us"] = "english[us]"
-        map["zh_cn"] = "简体中文"
-        if (isOpen.value) {
-            Window(
-                onCloseRequest = { isOpen.value = false },
-                title = "ChinaWare VMDW",
-                state = WindowState(
-                    size = DpSize(width.dp, height.dp),
-                    position = WindowPosition(Alignment.Center)
-                ),
-                icon = painterResource("icon.png")
-            ) {
-                MenuBar {
-                    Menu(I18n["menu.file"], mnemonic = 'F') {
-                        Item(
-                            I18n["menu.file.create"],
-                            mnemonic = 'C',
-                            shortcut = KeyShortcut(Key.C, ctrl = true, alt = true),
-                            enabled = isOpenFile.value
-                        ) {
-                            mode.setMode("create")
-                        }
-                        Item(
-                            I18n["menu.file.open"],
-                            mnemonic = 'O',
-                            shortcut = KeyShortcut(Key.O, ctrl = true, shift = true, alt = true),
-                            enabled = isOpenFile.value
-                        ) {
-                            mode.setMode("open")
-                        }
-                        Item(
-                            I18n["menu.file.close"],
-                            mnemonic = 'C',
-                            enabled = !isOpenFile.value
-                        ) {
-                            BuildSrc.openDirection = null
-                            isOpenFile.value = !isOpenFile.value
-                        }
-                        Item(
-                            I18n["menu.file.settings"],
-                            mnemonic = 'T',
-                            shortcut = KeyShortcut(Key.S, ctrl = true, alt = true),
-                        ) {
-//                            isSettingOpen.value = true
-                            mode.setMode("settings")
-                        }
-                        Item(I18n["menu.file.exit"], mnemonic = 'X') { isOpen.value = false }
+        val booleanRemember = remember {
+            mutableStateMapOf(
+                Pair("isOpen", true),
+                Pair("isOpenFile", true)
+            )
+        }
+        val stringRemember: SnapshotStateMap<String, String> = remember {
+            mutableStateMapOf(
+                Pair("title", "ChinaWare VMDW"),
+                Pair("language", Config.get("language", CONFIG_LANG_DEF) as String),
+                Pair("mode", "off")
+            )
+        }
+        val intRemember: SnapshotStateMap<String, Int> = remember {
+            mutableStateMapOf(
+                Pair("width", Config.get("width", 1000) as Int),
+                Pair("height", Config.get("height", 800) as Int)
+            )
+        }
+        val languageSelectMap: MutableMap<String, String> = mutableMapOf(
+            Pair("en_us", "english[us]"),
+            Pair("zh_cn", "简体中文")
+        )
+        // last mod 判断
+        if (Config["is_open_last_mod"] as Boolean) {
+            if (!Config.last_mod.isEmpty()) {
+                BuildSrc.openDirection = File(System.getProperty("user.dir"), ".vmdw/buildSrc/${Config.last_mod}")
+                if (BuildSrc.openDirection!!.exists()) {
+                    Config.set {
+                        it.last_mod = ""
                     }
-                    Menu(I18n["menu.edit"], mnemonic = 'E') { }
-                    Menu(I18n["menu.view"], mnemonic = 'V') { }
-                    Menu(I18n["menu.help"], mnemonic = 'H') {
-                        Item(I18n["menu.help.about"], mnemonic = 'A') {
-//                            isAboutOpen = true
-                            mode.setMode("about")
-                        }
-                    }
+                    BuildSrc.openDirection = null
+                    booleanRemember["stringRemember"] = true
                 }
-                windowContent(this)
             }
         }
-        when(mode.value) {
-            "about" -> newAbout(mode)
-            "settings" -> newSettings(mode, map, language)
-            "create" -> newCreate(mode, isOpenFile)
-            "open" -> fileOpen(mode)
+        //
+        if (booleanRemember["isOpen"]!!)
+            defaultWindow(booleanRemember, stringRemember, intRemember)
+        when(stringRemember["mode"]) {
+            "about" -> newAbout(stringRemember)
+            "settings" -> newSettings(languageSelectMap, stringRemember)
+            "create" -> newCreate(stringRemember, booleanRemember)
+            "open" -> fileOpen(stringRemember)
         }
     }
 }
