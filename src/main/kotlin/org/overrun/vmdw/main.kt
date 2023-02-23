@@ -38,8 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import org.overrun.vmdw.config.BuildSrc
-import org.overrun.vmdw.config.CONFIG_LANG_DEF
 import org.overrun.vmdw.config.Config
+import org.overrun.vmdw.config.ConfigNew
 import java.io.File
 
 /**
@@ -87,8 +87,10 @@ fun MutableState<String>.setMode(string: String) {
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     // Note: Do NOT use expression body. That cause the initialization reruns.
-    Config.init()
+    ConfigNew.init()
+//    Config.init()
     I18n.init()
+
     val a: Comparable<*> = if (true) 1 else "aa"
 
     application {
@@ -101,14 +103,14 @@ fun main() {
         val stringRemember: SnapshotStateMap<String, String> = remember {
             mutableStateMapOf(
                 Pair("title", "ChinaWare VMDW"),
-                Pair("language", Config.get("language", CONFIG_LANG_DEF) as String),
+                Pair("language", "en_us"),
                 Pair("mode", "off")
             )
         }
         val intRemember: SnapshotStateMap<String, Int> = remember {
             mutableStateMapOf(
-                Pair("width", Config.get("width", 1000) as Int),
-                Pair("height", Config.get("height", 800) as Int)
+                Pair("width", 1000),
+                Pair("height", 800)
             )
         }
         val languageSelectMap: MutableMap<String, String> = mutableMapOf(

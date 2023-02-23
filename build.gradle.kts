@@ -31,6 +31,8 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.alibaba:fastjson:2.0.23")
     compileOnly("org.jetbrains:annotations:23.1.0")
     testCompileOnly("org.jetbrains:annotations:23.1.0")
 }
